@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository, DeleteResult, In } from 'typeorm';
@@ -36,14 +36,16 @@ export class UserService {
     }
 
     async findAll(): Promise<User[]> {
-        const data = await this.userRepository.find();
+        const data = await this.userRepository.find();      
         return data;
     }
 
-
     async findOne(id: string): Promise<User> {
-        const data = await this.userRepository.findOne(id);
-        return data;
+        const user = await this.userRepository.findOne(id);
+        if (!user) {
+            throw new NotFoundException();
+        }
+        return user;
     }
     async findByParam(options?: object): Promise<User> {
         const data = await this.userRepository.findOne(options);
@@ -60,7 +62,7 @@ export class UserService {
     ): Promise<User | null> {
         const user = await this.userRepository.findOneOrFail(id);
         if (!user.id) {
-
+            throw new NotFoundException();
         }
         await this.userRepository.update(id, newValue);
         return await this.userRepository.findOne(id);
@@ -69,7 +71,6 @@ export class UserService {
     public async delete(id: number): Promise<DeleteResult> {
         return await this.userRepository.delete(id);
     }
-
 
     async createContractforUser(usercontract: UserContractDto): Promise<any> {
         let contracts = await this.contractService.findAllByIds(usercontract.contractIds);
@@ -80,8 +81,9 @@ export class UserService {
 
     async getUserContractById(id: string) {
         const user = await this.userRepository.findOne(id, { relations: ['contracts'] });
-        if (user) {
-          return user;
+        if (!user) {
+            throw new NotFoundException();
         }
-      }
+        return user;
+    }
 }
