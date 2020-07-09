@@ -1,9 +1,10 @@
 
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
 import * as  bcrypt from 'bcrypt';
 import { IsEmail } from 'class-validator';
 import { Exclude, Type } from 'class-transformer';
 import { UserContract } from '../users-contracts/user-contract.entity';
+import { ContractEntity } from 'src/contract/contract.entity';
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
@@ -36,11 +37,10 @@ export class User {
 
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
     public createdAt: Date;
-
-    // @OneToMany((type) => UserContract, (ul) => ul.user)
-    // @Type((t) => UserContract)
-    // @JoinColumn()
-    // userContracts: UserContract[];
+    
+    @ManyToMany(() => ContractEntity)
+    @JoinTable()
+    public contracts: ContractEntity[];
 
     @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
     public updatedAt: Date;
