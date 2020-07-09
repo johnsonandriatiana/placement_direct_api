@@ -11,6 +11,12 @@ export class ContractEntity{
     @Column()
     content: string;
 
+    @Column()
+    price: number;
+
+    @Column()
+    isActive: boolean;
+
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
     public createdAt: Date;
 

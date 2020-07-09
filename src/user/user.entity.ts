@@ -29,6 +29,9 @@ export class User {
     @Column()
     phone: string;
 
+    @Column()
+    isArchive: boolean;
+
 
     @Exclude()
     @Column()
