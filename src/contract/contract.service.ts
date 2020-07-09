@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ContractEntity } from './contract.entity';
 import { Repository, DeleteResult, In } from 'typeorm';
@@ -27,18 +27,22 @@ export class ContractService {
 
 
     async findAllByIds(ids: String[]): Promise<ContractEntity[]> {
-        const data = await this.contractRepository.find({where: {
-            id : In(ids) 
-        }});
+        const data = await this.contractRepository.find({ id : In(ids)  } );
         return data;
     }
 
     async findOne(id: string): Promise<ContractEntity> {
         const data = await this.contractRepository.findOne(id);
+        if (!data) {
+            throw new NotFoundException();
+        }
         return data;
     }
     async findByName(username: string): Promise<ContractEntity> {
         const data = await this.contractRepository.findOne(username);
+        if (!data) {
+            throw new NotFoundException();
+        }
         return data;
     }
 
@@ -52,7 +56,7 @@ export class ContractService {
     ): Promise<ContractEntity | null> {
         const user = await this.contractRepository.findOneOrFail(id);
         if (!user.id) {
-
+            throw new NotFoundException();
         }
         await this.contractRepository.update(id, newValue);
         return await this.contractRepository.findOne(id);
