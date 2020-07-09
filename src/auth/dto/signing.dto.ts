@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class ContractDto {
+export class SigningDto {
     @ApiProperty()
-    name: string;
+    username: string;
     @ApiProperty()
-    content: string;
+    password: string;
 }

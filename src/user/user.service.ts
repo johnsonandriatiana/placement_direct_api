@@ -1,14 +1,17 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { Repository, DeleteResult } from 'typeorm';
+import { Repository, DeleteResult, In } from 'typeorm';
 import { UserDto } from './dto/user.dto';
+import { ContractService } from 'src/contract/contract.service';
+import { UserContractDto } from './dto/user-contract.dto';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        private contractService: ContractService,
     ) { }
 
     async create(userDto: UserDto): Promise<User> {
@@ -66,4 +69,19 @@ export class UserService {
     public async delete(id: number): Promise<DeleteResult> {
         return await this.userRepository.delete(id);
     }
+
+
+    async createContractforUser(usercontract: UserContractDto): Promise<any> {
+        let contracts = await this.contractService.findAllByIds(usercontract.contractIds);
+        const user = await this.userRepository.findOneOrFail(usercontract.userId);
+        user.contracts = [...contracts]
+        await this.userRepository.save(user);
+    }
+
+    async getUserContractById(id: string) {
+        const user = await this.userRepository.findOne(id, { relations: ['contracts'] });
+        if (user) {
+          return user;
+        }
+      }
 }
