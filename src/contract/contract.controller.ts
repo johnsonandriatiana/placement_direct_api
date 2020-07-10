@@ -1,7 +1,7 @@
 import { Controller, UseInterceptors, ClassSerializerInterceptor, Post, Body, UseGuards, Get, Param, Delete } from '@nestjs/common';
 import { ContractService } from './contract.service';
 import { ContractDto } from './dto/contract.dto';
-import { ContractEntity } from './contract.entity';
+import { Contract } from './contract.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
@@ -13,7 +13,7 @@ export class ContractController {
     @UseInterceptors(ClassSerializerInterceptor)  
     @ApiBearerAuth()
     @Post()
-    create(@Body() createUserDto: ContractDto): Promise<ContractEntity> {
+    create(@Body() createUserDto: ContractDto): Promise<Contract> {
         return this.contractService.create(createUserDto);
     }
 
@@ -21,7 +21,7 @@ export class ContractController {
     @UseInterceptors(ClassSerializerInterceptor)
     @ApiBearerAuth()
     @Get()
-    findAll(): Promise<ContractEntity[]> {
+    findAll(): Promise<Contract[]> {
         return this.contractService.findAll();
     }
 
@@ -29,7 +29,7 @@ export class ContractController {
     @UseInterceptors(ClassSerializerInterceptor)
     @ApiBearerAuth()
     @Get(':id')
-    findOne(@Param('id') id: string): Promise<ContractEntity> {
+    findOne(@Param('id') id: string): Promise<Contract> {
         return this.contractService.findOne(id);
     }
 

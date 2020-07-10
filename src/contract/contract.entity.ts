@@ -1,7 +1,7 @@
 
 import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 @Entity()
-export class ContractEntity{
+export class Contract{
     @PrimaryGeneratedColumn()
     id: number;
 

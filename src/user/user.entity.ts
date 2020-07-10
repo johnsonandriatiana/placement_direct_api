@@ -4,7 +4,7 @@ import * as  bcrypt from 'bcrypt';
 import { IsEmail } from 'class-validator';
 import { Exclude, Type } from 'class-transformer';
 import { UserContract } from '../users-contracts/user-contract.entity';
-import { ContractEntity } from 'src/contract/contract.entity';
+import { Contract } from 'src/contract/contract.entity';
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
@@ -38,9 +38,9 @@ export class User {
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
     public createdAt: Date;
     
-    @ManyToMany(() => ContractEntity)
+    @ManyToMany(() => Contract)
     @JoinTable()
-    public contracts: ContractEntity[];
+    public contracts: Contract[];
 
     @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
     public updatedAt: Date;

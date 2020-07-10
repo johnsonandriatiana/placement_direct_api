@@ -1,44 +1,44 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ContractEntity } from './contract.entity';
+import { Contract } from './contract.entity';
 import { Repository, DeleteResult, In } from 'typeorm';
 import { ContractDto } from './dto/contract.dto';
 
 @Injectable()
 export class ContractService {
     constructor(
-        @InjectRepository(ContractEntity)
-        private readonly contractRepository: Repository<ContractEntity>,
+        @InjectRepository(Contract)
+        private readonly contractRepository: Repository<Contract>,
     ) { }
 
-    async create(userDto: ContractDto): Promise<ContractEntity> {
+    async create(contractDto: ContractDto): Promise<Contract> {
 
-        const { name, content } = userDto;
+        const { name, content } = contractDto;
 
-        const user: ContractEntity = await this.contractRepository.create({ name, content });
-        return await this.contractRepository.save(user);
+        const contract: Contract = await this.contractRepository.create({ name, content });
+        return await this.contractRepository.save(contract);
 
     }
 
-    async findAll(): Promise<ContractEntity[]> {
+    async findAll(): Promise<Contract[]> {
         const data = await this.contractRepository.find();
         return data;
     }
 
 
-    async findAllByIds(ids: String[]): Promise<ContractEntity[]> {
+    async findAllByIds(ids: String[]): Promise<Contract[]> {
         const data = await this.contractRepository.find({ id : In(ids)  } );
         return data;
     }
 
-    async findOne(id: string): Promise<ContractEntity> {
+    async findOne(id: string): Promise<Contract> {
         const data = await this.contractRepository.findOne(id);
         if (!data) {
             throw new NotFoundException();
         }
         return data;
     }
-    async findByName(username: string): Promise<ContractEntity> {
+    async findByName(username: string): Promise<Contract> {
         const data = await this.contractRepository.findOne(username);
         if (!data) {
             throw new NotFoundException();
@@ -53,9 +53,9 @@ export class ContractService {
     async update(
         id: number,
         newValue: ContractDto,
-    ): Promise<ContractEntity | null> {
-        const user = await this.contractRepository.findOneOrFail(id);
-        if (!user.id) {
+    ): Promise<Contract | null> {
+        const contract = await this.contractRepository.findOneOrFail(id);
+        if (!contract.id) {
             throw new NotFoundException();
         }
         await this.contractRepository.update(id, newValue);
