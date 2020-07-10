@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Type } from 'class-transformer';
-import { ContractEntity } from '../contract/contract.entity';
+import { Contract } from '../contract/contract.entity';
 
 @Entity('user_contracts')
 export class UserContract {
@@ -15,9 +15,9 @@ export class UserContract {
   @Type((t) => User)
   user: User;
 
-  @ManyToOne((type) => ContractEntity)
-  @Type((t) => ContractEntity)
-  license: ContractEntity;
+  @ManyToOne((type) => Contract)
+  @Type((t) => Contract)
+  license: Contract;
 
   @Column()
   yearsActive: number;
